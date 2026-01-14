@@ -1,9 +1,10 @@
 -- Migration number: 0001 	 2026-01-14T17:14:24.062Z
 CREATE TABLE messages (
 	id TEXT PRIMARY KEY,
-	toEmail TEXT NOT NULL,
+	recipient TEXT NOT NULL,
+	sender TEXT NOT NULL,
 	subject TEXT NOT NULL,
-	body TEXT NOT NULL,
+    content TEXT NOT NULL,
     sentAt TEXT,
     createdAt TEXT NOT NULL
 );
