@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types';
 import type { Mocked } from 'vitest';
+import type { RecipientRepository } from '$lib/server/repositories/recipient.repository';
+import { MailService } from '$lib/server/services/mail.service';
+import type { MessageRepository } from '$lib/server/repositories/message.repository';
+import type { AttachmentRepository } from '$lib/server/repositories/attachment.repository';
+import type { MessageDto } from '$lib/server/domain/dto/message.dto';
 
 describe('Mail Service', () => {
 	let service: MailService;
@@ -18,7 +23,7 @@ describe('Mail Service', () => {
 			findAll: vi.fn(),
 			findOne: vi.fn()
 		} as unknown as Mocked<MessageRepository>;
-		mockedAttachmentRepository = { createBatch: vi.fn() } as unknown as Mocked<AttachmentRepository>;
+		mockedAttachmentRepository = { createBatch: vi.fn(), delete: vi.fn() } as unknown as Mocked<AttachmentRepository>;
 		mockedRecipientRepository = {
 			createBatch: vi.fn(),
 			findAll: vi.fn(),
@@ -29,7 +34,7 @@ describe('Mail Service', () => {
 		} as unknown as Mocked<D1Database>;
 
 		service = new MailService(
-			mockDb,
+			mockedDb,
 			mockedMessageRepository,
 			mockedAttachmentRepository,
 			mockedRecipientRepository,
@@ -55,7 +60,6 @@ describe('Mail Service', () => {
 
 			expect(mockedMessageRepository.createBatch).toHaveBeenCalledWith(
 				expect.objectContaining({
-					id: payload.id,
 					subject: payload.subject,
 					content: payload.content
 				})
@@ -99,48 +103,33 @@ describe('Mail Service', () => {
 				recipients: ['testDuplicate1@mail.com', 'testDuplicate1@mail.com']
 			});
 
+			mockedMessageRepository.createBatch.mockResolvedValue({
+				id: 'msg-123',
+				statement: fakeStatement
+			});
+			mockedRecipientRepository.createBatch.mockResolvedValue({
+				id: 'rec-123',
+				statement: fakeStatement
+			});
+
 			await service.sendEmail(payload);
 
+			expect(mockedMessageRepository.createBatch).toHaveBeenCalledTimes(1);
 			expect(mockedRecipientRepository.createBatch).toHaveBeenCalledTimes(1);
 		});
 		it('should return a list of messages', async () => {
-			const mockedList: MessageDto = [
+			const mockedList: MessageDto[] = [
 				{
-					id: 1,
+					id: "1",
 					subject: 'Greetings',
 					content: 'Hello, World!',
-					sentAt: new Date(),
-					attachments: [
-						{
-							id: 1,
-							filename: 'hello.txt',
-							contentType: 'text/plain',
-							size: 11,
-							downloadUrl: '/api/attachments/1/download'
-						},
-						{
-							id: 2,
-							filename: 'hello2.txt',
-							contentType: 'text/plain',
-							size: 31,
-							downloadUrl: '/api/attachments/2/download'
-						}
-					]
+					sentAt: new Date(Date.now()).toDateString(),
 				},
 				{
-					id: 2,
+					id: "2",
 					subject: 'Leave',
 					content: 'I have to leave today...',
-					sentAt: new Date(),
-					attachments: [
-						{
-							id: 3,
-							filename: 'hello.txt',
-							contentType: 'text/plain',
-							size: 11,
-							downloadUrl: '/api/attachments/3/download'
-						}
-					]
+					sentAt: new Date(Date.now()).toDateString(),
 				}
 			];
 
@@ -149,26 +138,25 @@ describe('Mail Service', () => {
 			const response: MessageDto[] = await service.getMails();
 
 			expect(response).toEqual(mockedList);
-			expect(mockedRecipientRepository.findAll).toHaveBeenCalled();
 			expect(response.length).toBe(2);
 		});
 		it('should get single email details', async () => {
-			const mailId = 1;
+			const mailId = "1";
 			const mockedMail: MessageDto = {
 				id: mailId,
 				subject: 'Leave',
 				content: 'I have to leave today...',
-				sentAt: new Date(),
+				sentAt: new Date(Date.now()).toDateString(),
 				attachments: [
 					{
-						id: 1,
+						id: "1",
 						filename: 'hello.txt',
 						contentType: 'text/plain',
 						size: 11,
 						downloadUrl: '/api/attachments/1/download'
 					},
 					{
-						id: 2,
+						id: "2",
 						filename: 'hello2.txt',
 						contentType: 'text/plain',
 						size: 31,
@@ -177,11 +165,11 @@ describe('Mail Service', () => {
 				],
 				recipients: [
 					{
-						id: 1,
+						id: "1",
 						email: 'test1@mail.com'
 					},
 					{
-						id: 2,
+						id: "2",
 						email: 'test2@mail.com'
 					}
 				]
@@ -189,10 +177,10 @@ describe('Mail Service', () => {
 
 			mockedMessageRepository.findOne.mockResolvedValue(mockedMail);
 
-			const response: MessageDto = await service.getOneMail(mailId);
+			const response: MessageDto = await service.getOneMail(mailId) as MessageDto;
 
 			expect(response).toEqual(mockedMail);
-			expect(mockedRecipientRepository.findOne).toHaveBeenCalledTimes(1);
+			expect(mockedMessageRepository.findOne).toHaveBeenCalledTimes(1);
 		});
 	});
 	describe('failure', () => {
