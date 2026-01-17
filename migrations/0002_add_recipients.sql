@@ -5,7 +5,7 @@ CREATE TABLE recipients (
     email TEXT NOT NULL,
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (messageId) REFERENCES messages(id) ON DELETE CASCADE
-)
+);
 
 CREATE INDEX IF NOT EXISTS idx_recipients_messageId ON recipients(messageId);
 CREATE INDEX IF NOT EXISTS idx_recipients_email ON recipients(email);
