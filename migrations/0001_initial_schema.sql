@@ -1,12 +1,10 @@
 -- Migration number: 0001 	 2026-01-14T17:14:24.062Z
 CREATE TABLE messages (
 	id TEXT PRIMARY KEY,
-	recipient TEXT NOT NULL,
-	sender TEXT NOT NULL,
 	subject TEXT NOT NULL,
     content TEXT NOT NULL,
     sentAt TEXT,
-    createdAt TEXT NOT NULL
+    createdAt TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE attachments (
@@ -16,5 +14,9 @@ CREATE TABLE attachments (
 	filename TEXT NOT NULL,
     contentType TEXT NOT NULL,
     size INTEGER NOT NULL,
-    createdAt TEXT NOT NULL
+    createdAt TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (messageId) REFERENCES messages(id) ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_attachments_messageId ON attachments(messageId);
+CREATE INDEX IF NOT EXISTS idx_attachments_r2Key ON attachments(r2Key);
