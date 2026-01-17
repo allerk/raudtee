@@ -8,7 +8,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const data = {
 		subject: formData.get('subject'),
 		content: formData.get('content'),
-		recipients: formData.getAll('recipients'),
+		recipients: formData.get('recipients'),
 		attachments: formData.getAll('attachments')
 	};
 	const result = sendEmailSchema.safeParse(data);
