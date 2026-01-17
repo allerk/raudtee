@@ -6,6 +6,7 @@ import type { BatchResponse } from '$lib/server/domain/shared/batch-response.int
 import type { MessageDto } from '$lib/server/domain/dto/message.dto';
 import type { MailDto } from '$lib/server/domain/dto/mail.dto';
 import { AppError } from '$lib/server/errors/app-error';
+import type { AttachmentDownloadDto } from '$lib/server/domain/dto/attachment_download.dto';
 
 export class MailService {
 	constructor(
@@ -86,5 +87,10 @@ export class MailService {
 
 	async getOneMail(id: string): Promise<MessageDto | null> {
 		return await this.messageRepository.findOne(id);
+	}
+
+	// ideally this method must be in its own service, but for now it's fine here
+	async downloadAttachment(id: string): Promise<AttachmentDownloadDto | null> {
+		return await this.attachmentRepository.getFile(id);
 	}
 }
