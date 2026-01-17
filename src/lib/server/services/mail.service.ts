@@ -5,6 +5,7 @@ import type { AttachmentRepository } from '$lib/server/repositories/attachment.r
 import type { BatchResponse } from '$lib/server/domain/shared/batch-response.interface';
 import type { MessageDto } from '$lib/server/domain/dto/message.dto';
 import type { MailDto } from '$lib/server/domain/dto/mail.dto';
+import { AppError } from '$lib/server/errors/app-error';
 
 export class MailService {
 	constructor(
@@ -18,13 +19,13 @@ export class MailService {
 		const uniqueRecipients: string[] = [...new Set(payload.recipients as string[])];
 
 		if (uniqueRecipients.length > 3) {
-			throw new Error('Maximum 3 recipients allowed');
+			throw new AppError('Maximum 3 recipients allowed', 400, 'LIMIT_RECIPIENTS');
 		}
 
 		if (payload.attachments) {
 			for (const file of payload.attachments) {
 				if (file.size > 4 * 1024 * 1024) {
-					throw new Error('Maximum file size must be 4mb');
+					throw new AppError('Maximum file size must be 4mb', 413, 'FILE_TOO_LARGE');
 				}
 			}
 		}
@@ -72,7 +73,10 @@ export class MailService {
 			for (const key of uploadedR2Keys) {
 				await this.attachmentRepository.delete(key);
 			}
-			throw error;
+			if (error instanceof AppError) {
+				throw error;
+			}
+			throw new AppError('Failed to process email transaction', 500, 'INTERNAL_DB_ERROR');
 		}
 	}
 

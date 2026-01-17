@@ -6,6 +6,7 @@ import { MailService } from '$lib/server/services/mail.service';
 import type { MessageRepository } from '$lib/server/repositories/message.repository';
 import type { AttachmentRepository } from '$lib/server/repositories/attachment.repository';
 import type { MessageDto } from '$lib/server/domain/dto/message.dto';
+import { AppError } from '$lib/server/errors/app-error';
 
 describe('Mail Service', () => {
 	let service: MailService;
@@ -199,7 +200,7 @@ describe('Mail Service', () => {
 			mockedRecipientRepository.createBatch.mockResolvedValue({ id: 'r1', statement: fakeStatement });
 			mockedAttachmentRepository.createBatch.mockResolvedValue(attachStmt);
 
-			const error = new Error('D1 Batch Failed: Transaction aborted');
+			const error = new AppError('D1 Batch Failed: Transaction aborted');
 			mockedDb.batch.mockRejectedValue(error);
 
 			await expect(service.sendEmail(payload)).rejects.toThrow(error);
@@ -211,7 +212,7 @@ describe('Mail Service', () => {
 			const bigFile = new File([bigContent], 'big.txt', { type: 'text/plain' });
 			const payload = createPayload({ attachments: [bigFile] });
 
-			const error = new Error('Maximum file size must be 4mb');
+			const error = new AppError('Maximum file size must be 4mb', 413, 'FILE_TOO_LARGE');
 
 			await expect(service.sendEmail(payload)).rejects.toThrow(error);
 			expect(mockedDb.batch).not.toHaveBeenCalled();
