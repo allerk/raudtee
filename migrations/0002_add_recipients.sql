@@ -3,7 +3,7 @@ CREATE TABLE recipients (
     id TEXT PRIMARY KEY,
     messageId TEXT NOT NULL REFERENCES messages(id),
     email TEXT NOT NULL,
-    createdAt TEXT NOT NULL DEFAULT (datetime('now'))
+    createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (messageId) REFERENCES messages(id) ON DELETE CASCADE
 )
 
