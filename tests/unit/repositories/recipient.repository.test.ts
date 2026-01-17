@@ -1,5 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, type Mocked, vi } from 'vitest';
 import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types';
+import { RecipientRepository } from '$lib/server/repositories/recipient.repository';
+import type { BatchResponse } from '$lib/server/domain/shared/batch-response.interface';
+import type { RecipientDto } from '$lib/server/domain/dto/recipient.dto';
 
 describe('RecipientRepository', () => {
 	let repository: RecipientRepository;
