@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, type Mocked, vi } from 'vitest';
 import type { D1Database, D1PreparedStatement } from '@cloudflare/workers-types';
+import type { RecipientDto } from '$lib/server/domain/dto/recipient.dto';
+import { MessageRepository } from '$lib/server/repositories/message.repository';
+import type { AttachmentRepository } from '$lib/server/repositories/attachment.repository';
+import type { RecipientRepository } from '$lib/server/repositories/recipient.repository';
+import type { BatchResponse } from '$lib/server/domain/shared/batch-response.interface';
+import type { AttachmentDto } from '$lib/server/domain/dto/attachment.dto';
+import type { MessageDto } from '$lib/server/domain/dto/message.dto';
 
 describe('MessageRepository', () => {
 	let repository: MessageRepository;
@@ -36,7 +43,7 @@ describe('MessageRepository', () => {
 		vi.spyOn(Date, 'now').mockReturnValue(sentAtTimestamp);
 		vi.spyOn(Date.prototype, 'toDateString').mockReturnValue(dateString);
 
-		const payload = {
+		const payload: MessageDto = {
 			subject: 'Hello',
 			content: 'World',
 		}
@@ -75,7 +82,6 @@ describe('MessageRepository', () => {
 		const recipientId1 = 'recipient-id-1234-5678';
 		const recipientId2 = 'recipient-id-4321-8765';
 
-		// AttachmentDto[]
 		const attachmentDtos: AttachmentDto[] = [
 			{
 				id: attachmentId1,
@@ -94,7 +100,6 @@ describe('MessageRepository', () => {
 		];
 		mockedAttachmentRepository.findAllByMessageId.mockResolvedValue(attachmentDtos);
 
-		// RecipientDto[]
 		const recipientDtos: RecipientDto[] = [
 			{
 				id: recipientId1,
@@ -121,8 +126,7 @@ describe('MessageRepository', () => {
 
 		mockedDb.prepare.mockReturnValue({ bind: mockBind } as unknown as D1PreparedStatement);
 
-		// MessageDto = { id: string, subject: string, content: string, sentAt: Date, attachments: AttachmentDto[], recipients: RecipientDto[] }
-		const result: MessageDto = await repository.findOne(messageId);
+		const result: MessageDto = await repository.findOne(messageId) as MessageDto;
 
 		expect(mockedDb.prepare).toHaveBeenCalledWith(
 			expect.stringContaining('SELECT * FROM messages WHERE id = ?')
@@ -138,12 +142,12 @@ describe('MessageRepository', () => {
 			id: messageId,
 			subject: dbRecord.subject,
 			content: dbRecord.content,
-			sentAt: expect.any(Date),
+			sentAt: expect.anything(),
 			attachments: attachmentDtos,
 			recipients: recipientDtos,
 		});
 
-		expect(result.sentAt.getTime()).toBe(new Date(dbRecord.sentAt).getTime());
+		expect(new Date(result.sentAt!).getTime()).toBe(new Date(dbRecord.sentAt).getTime());
 
 		expect(result.attachments).toHaveLength(2);
 		expect(result.recipients).toHaveLength(2);
@@ -158,13 +162,13 @@ describe('MessageRepository', () => {
 				id: 'msg-1',
 				subject: 'First Mail',
 				content: 'Hello world',
-				sent_at: dateString,
+				sentAt: dateString,
 			},
 			{
 				id: 'msg-2',
 				subject: 'Second Mail',
 				content: 'Goodbye world',
-				sent_at: dateString,
+				sentAt: dateString,
 			}
 		];
 
@@ -187,10 +191,10 @@ describe('MessageRepository', () => {
 			id: 'msg-1',
 			subject: 'First Mail',
 			content: 'Hello world',
-			sentAt: expect.any(Date)
+			sentAt: expect.anything()
 		});
 
-		expect(result[0].sentAt.toDateString()).toBe(dateString);
+		expect(new Date(result[0].sentAt!).toDateString()).toBe(dateString);
 
 		expect(result[0]).not.toHaveProperty('attachments');
 		expect(result[0]).not.toHaveProperty('recipients');
