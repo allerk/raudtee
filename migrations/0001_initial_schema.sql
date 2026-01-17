@@ -1,4 +1,5 @@
 -- Migration number: 0001 	 2026-01-14T17:14:24.062Z
+DROP TABLE IF EXISTS messages;
 CREATE TABLE messages (
 	id TEXT PRIMARY KEY,
 	subject TEXT NOT NULL,
@@ -7,6 +8,7 @@ CREATE TABLE messages (
     createdAt TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+DROP TABLE IF EXISTS attachments;
 CREATE TABLE attachments (
 	id TEXT PRIMARY KEY,
 	messageId TEXT NOT NULL REFERENCES messages(id),

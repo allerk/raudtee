@@ -1,4 +1,5 @@
 -- Migration number: 0002 	 2026-01-15T21:39:06.935Z
+DROP TABLE IF EXISTS recipients;
 CREATE TABLE recipients (
     id TEXT PRIMARY KEY,
     messageId TEXT NOT NULL REFERENCES messages(id),
