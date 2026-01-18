@@ -1,6 +1,5 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { Services } from '$lib/server/di/container';
 
 declare global {
 	namespace App {
@@ -12,7 +11,7 @@ declare global {
 		// interface PageState {}
 		interface Platform {
 			env: {
-				"r2-mail-service": R2Bucket;
+				r2_mail_service: R2Bucket;
 				d1_mail_service: D1Database;
 			};
 		}

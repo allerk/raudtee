@@ -77,7 +77,7 @@ export class MailService {
 			if (error instanceof AppError) {
 				throw error;
 			}
-			throw new AppError('Failed to process email transaction', 500, 'INTERNAL_DB_ERROR');
+			throw new AppError('Something went wrong on server side', 500, 'INTERNAL_DB_ERROR');
 		}
 	}
 

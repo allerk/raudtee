@@ -6,7 +6,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.platform?.env) {
 		event.locals.services = createServices(
 			event.platform.env.d1_mail_service as unknown as D1Database,
-			event.platform.env['r2-mail-service'] as unknown as R2Bucket
+			event.platform.env.r2_mail_service as unknown as R2Bucket
 		);
 	}
 
