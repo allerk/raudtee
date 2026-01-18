@@ -1,4 +1,4 @@
-# HOW TO RUN
+# Overview
 
 This project is a SvelteKit app targeting Cloudflare Workers. It exposes a small UI and a mock Microsoft Graph Mail Service API for sending and browsing emails with attachments.
 UI is built around a form with a single submit button to send a request to the API and a list of messages that were sent.
