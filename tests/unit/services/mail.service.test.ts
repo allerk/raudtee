@@ -154,14 +154,14 @@ describe('Mail Service', () => {
 						filename: 'hello.txt',
 						contentType: 'text/plain',
 						size: 11,
-						downloadUrl: '/api/attachments/1/download'
+						downloadUrl: '/api/v1.0/attachments/1/download'
 					},
 					{
 						id: "2",
 						filename: 'hello2.txt',
 						contentType: 'text/plain',
 						size: 31,
-						downloadUrl: '/api/attachments/2/download'
+						downloadUrl: '/api/v1.0/attachments/2/download'
 					}
 				],
 				recipients: [

@@ -88,14 +88,14 @@ describe('MessageRepository', () => {
 				filename: 'test1.pdf',
 				contentType: 'application/pdf',
 				size: 1024,
-				downloadUrl: `/api/attachments/${attachmentId1}/download`
+				downloadUrl: `/api/v1.0/attachments/${attachmentId1}/download`
 			},
 			{
 				id: attachmentId2,
 				filename: 'test2.pdf',
 				contentType: 'application/pdf',
 				size: 1024,
-				downloadUrl: `/api/attachments/${attachmentId2}/download`
+				downloadUrl: `/api/v1.0/attachments/${attachmentId2}/download`
 			}
 		];
 		mockedAttachmentRepository.findAllByMessageId.mockResolvedValue(attachmentDtos);

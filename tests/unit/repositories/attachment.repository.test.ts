@@ -146,7 +146,7 @@ describe('AttachmentRepository', () => {
 			filename: 'test1.pdf',
 			contentType: 'application/pdf',
 			size: 1024,
-			downloadUrl: `/api/attachments/${attachmentId1}/download`
+			downloadUrl: `/api/v1.0/attachments/${attachmentId1}/download`
 		});
 
 		expect(result[1].id).toBe(attachmentId2);

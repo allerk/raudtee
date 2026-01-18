@@ -55,7 +55,7 @@ export class AttachmentRepository {
 			filename: row.filename,
 			contentType: row.contentType,
 			size: row.size,
-			downloadUrl: `/api/attachments/${row.id}/download`
+			downloadUrl: `/api/v1.0/attachments/${row.id}/download`
 		}));
 	}
 
