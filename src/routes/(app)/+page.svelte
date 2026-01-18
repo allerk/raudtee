@@ -114,8 +114,9 @@
 			</h3>
 		</div>
 		<div class="flex flex-col gap-1">
-			<label class="text-sm font-medium text-slate-600">Recipients</label>
+			<label class="text-sm font-medium text-slate-600" for="recipients">Recipients</label>
 			<input
+				id="recipients"
 				bind:value={recipient}
 				placeholder="user1@mail.com, user2@mail.com"
 				class="w-full rounded border p-2 transition-colors
@@ -129,8 +130,9 @@
 			{/each}
 		</div>
 		<div class="flex flex-col gap-1">
-			<label class="text-sm font-medium text-slate-600">Subject</label>
+			<label class="text-sm font-medium text-slate-600" for="subject">Subject</label>
 				<input
+					id="subject"
 					bind:value={subject}
 					placeholder="Enter subject"
 					class="w-full rounded border p-2 transition-colors {getError('subject').length ? 'border-red-500 bg-red-50' : 'border-slate-300'}"
@@ -140,8 +142,9 @@
 				{/each}
 		</div>
 		<div class="flex flex-col gap-1">
-			<label class="text-sm font-medium text-slate-600">Content</label>
+			<label class="text-sm font-medium text-slate-600" for="content">Content</label>
 				<textarea
+					id="content"
 					bind:value={content}
 					placeholder="Type your content here..."
 					rows="4"
@@ -152,11 +155,12 @@
 					{/each}
 		</div>
 		<div class="flex flex-col gap-2">
-			<label class="text-sm font-medium text-slate-600">Attachments</label>
+			<label class="text-sm font-medium text-slate-600" for="attachments">Attachments</label>
 			<span class="text-xs text-slate-500">To add multiple files, you need to select them all at once when clicking “Choose Files” :(</span>
 
 			<div class="relative">
 				<input
+					id="attachments"
 					type="file"
 					multiple
 					bind:this={fileInput}
