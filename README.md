@@ -106,7 +106,7 @@ All routes are under `/api/v1.0`:
 
 ### Main components
 - **SvelteKit UI**
-  - `src/routes/(app)/+page.svelte`: send form + latest list messages.
+  - `src/routes/(app)/+page.svelte`: send form + list messages.
   - `src/routes/(app)/messages/[id]/+page.svelte`: message detail + downloads.
   - `src/lib/components/api-monitor`: widget to show API response logs in the UI.
 - **API endpoints**
