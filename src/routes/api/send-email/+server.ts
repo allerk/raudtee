@@ -14,8 +14,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const result = sendEmailSchema.safeParse(data);
 	if (!result.success) {
 		const formattedErrors = z.treeifyError(result.error);
-
 		return json({
+			ok: false,
 			error: 'Validation failed',
 			details: formattedErrors
 		}, { status: 400 });
