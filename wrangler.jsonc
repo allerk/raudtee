@@ -9,16 +9,17 @@
 	},
 	"d1_databases": [
 		{
-			"binding": "DB",
+			"binding": "d1_mail_service",
 			"database_name": "d1-mail-service",
-			"database_id": "local",
-            "migrations_dir": "migrations"
+			"database_id": "84c84ab1-0765-411e-addd-a17d0766aaeb"
+//            "database_id": "local", // local dev
+//            "migrations_dir": "migrations" // local dev
 		}
 	],
 	"r2_buckets": [
 		{
-			"binding": "BUCKET",
-			"bucket_name": "r2-mail-service"
+			"bucket_name": "r2-mail-service",
+			"binding": "r2_mail_service"
 		}
 	]
 }

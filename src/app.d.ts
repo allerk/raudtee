@@ -12,8 +12,8 @@ declare global {
 		// interface PageState {}
 		interface Platform {
 			env: {
-				BUCKET: R2Bucket;
-				DB: D1Database;
+				"r2-mail-service": R2Bucket;
+				d1_mail_service: D1Database;
 			};
 		}
 	}
