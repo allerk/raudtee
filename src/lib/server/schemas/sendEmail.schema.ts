@@ -15,7 +15,7 @@ export const sendEmailSchema = z.object({
 		),
 	attachments: z.array(
 		z.instanceof(File)
-			.refine((file) => file.size <= MAX_FILE_SIZE, 'Max file size is 4MB')
+			// .refine((file) => file.size <= MAX_FILE_SIZE, 'Max file size is 4MB')
 		// might be useful to validate the file type later
 	).optional()
 });
