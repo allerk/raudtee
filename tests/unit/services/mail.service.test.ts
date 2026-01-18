@@ -226,25 +226,5 @@ describe('Mail Service', () => {
 
 			expect(mockedDb.batch).not.toHaveBeenCalled();
 		});
-		// it('should fail sending email to the specific recipient more than 4 times', async () => {
-		// 	const payload = {
-		// 		recipients: ['spam@mail.com'],
-		// 		subject: 'Spam',
-		// 		content: 'Hello again'
-		// 	};
-		// 	const error = new Error('Maximum 4 times to the same recipients allowed to sent emails');
-		// 	vi.spyOn(mockedMessageRepository, 'createBatch');
-		// 	vi.spyOn(mockedRecipientRepository, 'createBatch').mockImplementation(() => {
-		// 		throw error;
-		// 	});
-		//
-		// 	await expect(service.sendEmail(payload)).rejects.toThrow(
-		// 		'Maximum 4 times to the same recipients allowed to sent emails'
-		// 	);
-		//
-		// 	expect(mockedMessageRepository.createBatch).toHaveBeenCalledTimes(1);
-		// 	expect(mockedRecipientRepository.createBatch).toHaveBeenCalledTimes(1);
-		// 	expect(mockedDb.batch).not.toHaveBeenCalled();
-		// });
 	});
 });
